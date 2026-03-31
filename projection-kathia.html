@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projections 3D | Villa Kathia — BERKAY Immobilier</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --forest:#0d2818;--forest-mid:#1a4028;--gold:#b8975a;--gold-light:#d4b87a;
+  --charcoal:#1a1a1a;--off-white:#f7f5f0;--warm-gray:#7a7570;
+  --light-gray:#e8e4de;--cream:#f0ece4;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'Instrument Sans','Helvetica Neue',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);color:var(--charcoal);background:#fff;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.4rem 3rem;display:flex;justify-content:space-between;align-items:center;transition:all .5s ease;background:transparent}
+.nav.scrolled{background:rgba(255,255,255,.97);backdrop-filter:blur(20px);padding:.9rem 3rem;box-shadow:0 1px 0 rgba(0,0,0,.08)}
+.nav-logo img{height:36px;transition:height .4s}
+.nav-logo .logo-sombre{display:none}
+.nav.scrolled .nav-logo img{height:30px}
+.nav.scrolled .nav-logo .logo-clair{display:none}
+.nav.scrolled .nav-logo .logo-sombre{display:block}
+.nav-links{display:flex;gap:2.5rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.85);text-decoration:none;font-size:.75rem;letter-spacing:.18em;text-transform:uppercase;transition:color .3s;position:relative}
+.nav.scrolled .nav-links a{color:rgba(13,40,24,.75)}
+.nav.scrolled .nav-links a:hover{color:var(--gold)}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;right:0;height:1px;background:var(--gold);transform:scaleX(0);transition:transform .3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-links .cur{color:var(--gold)!important}
+.nav-links .cur::after{transform:scaleX(1)}
+
+/* HERO */
+.hero{height:100vh;min-height:600px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.hero-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,.55) 0%,rgba(0,0,0,.1) 65%,transparent 100%),linear-gradient(to bottom,rgba(0,0,0,.25) 0%,rgba(0,0,0,.05) 35%,rgba(0,0,0,.45) 65%,rgba(0,0,0,.78) 100%)}
+.hero-content{position:relative;z-index:2;padding:0 3rem 5rem;max-width:850px}
+.hero-tag{font-size:.82rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold-light);margin-bottom:1.2rem;text-shadow:0 1px 12px rgba(0,0,0,.7);opacity:0;animation:fadeUp 1s .3s forwards}
+.hero-title{font-family:var(--serif);font-size:clamp(2.8rem,5.8vw,5.2rem);font-weight:300;color:#fff;line-height:1.08;margin-bottom:1.2rem;opacity:0;animation:fadeUp 1s .5s forwards;text-shadow:0 2px 20px rgba(0,0,0,.4)}
+.hero-title em{font-style:italic;color:var(--gold-light)}
+.hero-sub{font-size:.95rem;color:rgba(255,255,255,.9);line-height:1.85;max-width:500px;opacity:0;animation:fadeUp 1s .7s forwards;text-shadow:0 1px 12px rgba(0,0,0,.5)}
+.hero-badge{display:inline-block;margin-top:2rem;padding:.7rem 2rem;border:1px solid rgba(184,151,90,.4);font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);opacity:0;animation:fadeUp 1s .9s forwards}
+
+/* SECTIONS */
+.section{padding:7rem 4rem}
+.section-tag{font-size:.58rem;letter-spacing:.55em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;display:inline-block}
+.section-title{font-family:var(--serif);font-size:clamp(2rem,3.8vw,3.2rem);font-weight:300;line-height:1.12;margin-bottom:1.8rem;color:var(--charcoal);letter-spacing:-.01em}
+.section-text{font-size:.9rem;line-height:1.9;color:var(--warm-gray);max-width:560px}
+.gold-line{width:40px;height:1px;background:var(--gold);margin:1.4rem 0}
+
+/* INTRO */
+.intro-section{background:#fff;padding:6rem 4rem;text-align:center}
+.intro-section .section-title{margin:0 auto 1.8rem}
+.intro-section .section-text{margin:0 auto}
+.intro-badges{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-top:2.5rem}
+.intro-badge{padding:.65rem 1.6rem;border:1px solid rgba(184,151,90,.3);font-size:.62rem;letter-spacing:.3em;text-transform:uppercase;color:var(--forest)}
+
+/* ═══════════════════════════
+   FILM PROMOTIONNEL
+═══════════════════════════ */
+.film-section{background:#0a0a0a;padding:5rem 0}
+.film-section-header{text-align:center;padding:0 3rem 3rem}
+.film-section-header .section-tag{color:var(--gold)}
+.film-section-header .section-title{color:#fff;margin:0 auto 1rem}
+.film-section-header .section-text{color:rgba(255,255,255,.45);margin:0 auto}
+
+.film-wrap{position:relative;width:100%;max-width:1200px;margin:0 auto;aspect-ratio:16/9;overflow:hidden;background:#000;cursor:pointer;user-select:none}
+
+/* Couches KB */
+.film-layer{position:absolute;inset:0;background-size:cover;background-position:center;background-repeat:no-repeat;opacity:0;will-change:opacity,transform;transition:opacity 1s ease}
+.film-layer.active{opacity:1}
+
+@keyframes kb1{0%{transform:scale(1)      translate(0%,0%)}  100%{transform:scale(1.1)  translate(-2%,-1%)}}
+@keyframes kb2{0%{transform:scale(1.08)   translate(1.5%,1%)}100%{transform:scale(1)    translate(0%,0%)}}
+@keyframes kb3{0%{transform:scale(1)      translate(-1.5%,0)}100%{transform:scale(1.09) translate(1.5%,-1%)}}
+@keyframes kb4{0%{transform:scale(1.05)   translate(0,-1%)}  100%{transform:scale(1)    translate(-1.5%,1%)}}
+
+/* Overlay texte */
+.film-overlay{position:absolute;inset:0;z-index:10;pointer-events:none;display:flex;flex-direction:column;justify-content:flex-end;background:linear-gradient(to top,rgba(0,0,0,.62) 0%,rgba(0,0,0,.1) 40%,transparent 65%)}
+.film-text-block{padding:3rem 3rem 1rem;display:flex;justify-content:space-between;align-items:flex-end}
+.film-left{}
+.film-room-name{font-size:.6rem;letter-spacing:.45em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem}
+.film-villa-name{font-family:var(--serif);font-size:clamp(1.4rem,3vw,2.5rem);font-weight:300;color:#fff}
+.film-villa-name em{font-style:italic;color:var(--gold-light)}
+.film-counter{font-size:.62rem;letter-spacing:.2em;color:rgba(255,255,255,.3)}
+
+/* Barre contrôles */
+.film-controls{position:absolute;bottom:0;left:0;right:0;z-index:20;pointer-events:auto}
+.film-progress-track{height:3px;background:rgba(255,255,255,.12);cursor:pointer;position:relative}
+.film-progress-fill{height:100%;background:var(--gold);width:0%}
+.film-ctrl-bar{display:flex;align-items:center;gap:.8rem;padding:.65rem 1.5rem;background:rgba(0,0,0,.45);backdrop-filter:blur(16px)}
+.fc-btn{background:none;border:none;color:rgba(255,255,255,.65);cursor:pointer;padding:.25rem .4rem;font-size:1rem;line-height:1;transition:color .2s}
+.fc-btn:hover{color:#fff}
+.fc-play{width:34px;height:34px;border:1px solid rgba(255,255,255,.25);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:.85rem}
+.fc-play:hover{background:rgba(255,255,255,.15);border-color:#fff}
+.fc-speed{background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.6);font-size:.6rem;letter-spacing:.12em;padding:.28rem .55rem;font-family:var(--sans);outline:none;cursor:pointer}
+.fc-speed option{background:#111;color:#fff}
+.fc-spacer{flex:1}
+.fc-fs{background:none;border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.5);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;padding:.28rem .8rem;cursor:pointer;font-family:var(--sans);transition:all .2s}
+.fc-fs:hover{border-color:var(--gold);color:var(--gold)}
+.film-wrap.fakeFS{position:fixed!important;inset:0!important;z-index:9999!important;width:100vw!important;height:100vh!important;max-width:none!important;aspect-ratio:unset!important;}
+
+/* Grand play central */
+.film-big-play{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:15;width:76px;height:76px;background:rgba(255,255,255,.1);border:2px solid rgba(255,255,255,.35);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;pointer-events:auto;backdrop-filter:blur(10px)}
+.film-big-play:hover{background:rgba(255,255,255,.22);transform:translate(-50%,-50%) scale(1.08)}
+.film-big-play.hidden{opacity:0;pointer-events:none}
+
+/* GALERIE */
+.gallery-section{background:#f8f7f4;padding:6rem 4rem}
+.gallery-section .section-tag{display:block;text-align:center}
+.gallery-section .section-title{text-align:center;margin:0 auto 1rem}
+.gallery-section .gold-line{margin:1.2rem auto 2.5rem}
+
+.gallery-cats{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-bottom:2.5rem}
+.gcat{padding:.5rem 1.4rem;border:1px solid var(--light-gray);background:#fff;font-size:.6rem;letter-spacing:.25em;text-transform:uppercase;cursor:pointer;transition:all .2s;font-family:var(--sans);color:var(--warm-gray)}
+.gcat:hover{border-color:var(--gold);color:var(--gold)}
+.gcat.on{background:var(--forest);color:#fff;border-color:var(--forest)}
+
+.gallery-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:3px}
+.g-item{position:relative;aspect-ratio:4/3;overflow:hidden;cursor:zoom-in;background:#e0dcd5}
+.g-item img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;display:block}
+.g-item:hover img{transform:scale(1.07)}
+.g-item-lbl{position:absolute;bottom:0;left:0;right:0;padding:.6rem .9rem;font-size:.55rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.9);background:linear-gradient(to top,rgba(0,0,0,.5),transparent);opacity:0;transition:opacity .3s;transform:translateY(4px);transition:all .3s}
+.g-item:hover .g-item-lbl{opacity:1;transform:translateY(0)}
+
+/* LIGHTBOX */
+.lightbox{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.96);align-items:center;justify-content:center}
+.lightbox.active{display:flex}
+.lightbox img{max-width:88vw;max-height:88vh;object-fit:contain}
+.lb-close{position:absolute;top:1.5rem;right:2rem;color:#fff;font-size:1.8rem;cursor:pointer;background:none;border:none;opacity:.6;transition:opacity .3s}
+.lb-close:hover{opacity:1}
+.lb-nav{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:2rem;cursor:pointer;opacity:.7;transition:all .25s;padding:1.2rem 1.5rem;backdrop-filter:blur(8px)}
+.lb-nav:hover{opacity:1;background:rgba(255,255,255,.14)}
+.lb-prev{left:.5rem}.lb-next{right:.5rem}
+.lb-info{position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);text-align:center}
+.lb-counter{font-size:.7rem;letter-spacing:.2em;color:rgba(255,255,255,.35)}
+.lb-caption{font-size:.62rem;letter-spacing:.25em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:.3rem}
+
+/* CONTACT */
+.contact-section{background:var(--forest);padding:8rem 4rem;text-align:center;position:relative;overflow:hidden}
+.contact-section::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 70%,rgba(184,151,90,.06) 0%,transparent 50%)}
+.contact-section .section-tag{color:var(--gold);position:relative}
+.contact-section .section-title{color:#fff;margin:0 auto;position:relative}
+.contact-section .section-text{color:rgba(255,255,255,.55);margin:0 auto 2.5rem;position:relative}
+.contact-cards{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap;position:relative}
+.c-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);padding:2.2rem 2.8rem;text-align:center;min-width:240px;transition:all .3s}
+.c-card:hover{border-color:var(--gold);background:rgba(184,151,90,.05)}
+.c-card-label{font-size:.6rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem;display:block}
+.c-card-value{font-family:var(--serif);font-size:1.2rem;color:#fff;text-decoration:none;display:block}
+a.c-card-value:hover{color:var(--gold-light)}
+.contact-note{margin-top:2.5rem;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);position:relative}
+.btn-back{display:inline-flex;align-items:center;gap:.6rem;margin-bottom:3rem;padding:.8rem 2rem;border:1px solid rgba(184,151,90,.3);font-size:.62rem;letter-spacing:.28em;text-transform:uppercase;color:var(--gold);text-decoration:none;transition:all .3s;position:relative}
+.btn-back:hover{background:rgba(184,151,90,.08)}
+
+/* ML MODAL */
+.ml-overlay{display:none;position:fixed;inset:0;z-index:2000;background:rgba(13,40,24,.92);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:2rem}
+.ml-overlay.active{display:flex}
+.ml-modal{background:var(--off-white);max-width:760px;width:100%;max-height:82vh;overflow-y:auto;position:relative;padding:3.5rem 3rem}
+.ml-close{position:absolute;top:1.2rem;right:1.5rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--warm-gray);line-height:1}
+.ml-title{font-family:var(--serif);font-size:1.7rem;font-weight:300;color:var(--forest);margin-bottom:.5rem}
+.ml-subtitle{font-size:.62rem;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:1.8rem;display:block}
+.ml-body p{font-size:.82rem;line-height:1.8;color:var(--warm-gray)}
+
+/* FOOTER */
+.footer{background:#091a10;padding:1.8rem 3rem;display:flex;justify-content:space-between;align-items:center}
+.footer-logo img{height:22px;opacity:.7}
+.footer-legal{font-size:.65rem;color:rgba(255,255,255,.2)}
+
+/* ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0;transform:translateY(35px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+.reveal.vis{opacity:1;transform:translateY(0)}
+
+/* BURGER */
+.nav-burger{display:none;flex-direction:column;justify-content:center;gap:5px;background:none;border:none;cursor:pointer;padding:4px;z-index:200}
+.nav-burger span{display:block;width:22px;height:1.5px;background:#fff;transition:all .3s}
+.nav.scrolled .nav-burger span{background:var(--forest)}
+.nav-burger.open span:nth-child(1){transform:rotate(45deg) translate(4.5px,4.5px)}
+.nav-burger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.nav-burger.open span:nth-child(3){transform:rotate(-45deg) translate(4.5px,-4.5px)}
+.nav-mobile{display:none;position:fixed;inset:0;z-index:150;background:rgba(13,40,24,.98);flex-direction:column;align-items:center;justify-content:center;gap:2.2rem}
+.nav-mobile.open{display:flex}
+.nav-mobile a{color:rgba(255,255,255,.7);text-decoration:none;font-size:1rem;letter-spacing:.25em;text-transform:uppercase;font-family:var(--sans);transition:color .25s;padding:.4rem 0;border-bottom:1px solid rgba(255,255,255,.08);width:220px;text-align:center}
+.nav-mobile a:last-child{border-bottom:none}
+.nav-mobile a:hover{color:var(--gold)}
+.nav-mobile-close{position:absolute;top:1.4rem;right:1.8rem;background:none;border:none;color:rgba(255,255,255,.4);font-size:1.5rem;cursor:pointer}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .nav{padding:1rem 1.5rem}.nav-links{display:none}.nav-burger{display:flex}
+  .hero-content{padding:0 1.5rem 4rem}
+  .section{padding:4rem 1.5rem}.gallery-section{padding:4rem 1.5rem}
+  .contact-section{padding:4rem 1.5rem}.film-section{padding:3rem 0}
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .film-text-block{padding:1.5rem 1.2rem}.film-villa-name{font-size:1.3rem}
+  .intro-section{padding:4rem 1.5rem}
+  .footer{flex-direction:column;gap:.8rem;text-align:center;padding:1.5rem}
+}
+@media(max-width:480px){
+  .gallery-grid{grid-template-columns:repeat(2,1fr)}
+  .hero-title{font-size:clamp(2rem,10vw,2.8rem)}
+  .film-big-play{width:60px;height:60px}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="nav">
+  <a href="index.html" class="nav-logo">
+    <img src="Photos/Berkay clair.jpeg" alt="BERKAY Immobilier" class="logo-clair">
+    <img src="Photos/Berkay sombre.jpeg" alt="BERKAY Immobilier" class="logo-sombre">
+  </a>
+  <button class="nav-burger" id="nav-burger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+  <ul class="nav-links">
+    <li><a href="index.html">&larr; La villa</a></li>
+    <li><a href="#film">Film</a></li>
+    <li><a href="#galerie">Galerie 3D</a></li>
+    <li><a href="#contact">Contact</a></li>
+    <li><a href="projection-kathia.html" class="cur">Projections</a></li>
+  </ul>
+</nav>
+
+<div class="nav-mobile" id="nav-mobile">
+  <button class="nav-mobile-close" id="nav-mobile-close">&#10005;</button>
+  <a href="index.html" onclick="closeM()">&larr; La villa</a>
+  <a href="#film" onclick="closeM()">Film</a>
+  <a href="#galerie" onclick="closeM()">Galerie 3D</a>
+  <a href="#contact" onclick="closeM()">Contact</a>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <img class="hero-img" src="Photos/Projections/EXTERIEUR FACADE SUD.jpg" alt="Villa Kathia — Façade sud">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-tag">BERKAY Immobilier &mdash; Projections 3D</p>
+    <h1 class="hero-title">Visualisez<br><em>votre future</em><br>villa</h1>
+    <p class="hero-sub">Découvrez chaque espace de la Villa Kathia à travers des projections architecturales 3D haute précision — façades, intérieurs, extérieurs.</p>
+    <a href="#film" class="hero-badge" style="text-decoration:none">Voir le film &rarr;</a>
+  </div>
+</section>
+
+<!-- INTRO -->
+<section class="intro-section" id="intro">
+  <p class="section-tag reveal">Villa Kathia &mdash; All&eacute;e Kathia, M&eacute;rignies</p>
+  <h2 class="section-title reveal">Architecture contemporaine<br>projetée en images</h2>
+  <div class="gold-line reveal" style="margin:1.2rem auto"></div>
+  <p class="section-text reveal">Ces projections 3D vous permettent de vous approprier chaque espace avant livraison. De la façade au dressing, du séjour à la terrasse — la Villa Kathia se dévoile dans ses moindres détails.</p>
+  <div class="intro-badges reveal">
+    <span class="intro-badge">258 m&sup2; habitables</span>
+    <span class="intro-badge">1&nbsp;300 m&sup2; de terrain</span>
+    <span class="intro-badge">5 chambres</span>
+    <span class="intro-badge">Classe &eacute;nerg&eacute;tique A</span>
+    <span class="intro-badge">Golf &agrave; proximit&eacute;</span>
+  </div>
+</section>
+
+<!-- FILM PROMOTIONNEL -->
+<section class="film-section" id="film">
+  <div class="film-section-header">
+    <p class="section-tag reveal">Film de pr&eacute;sentation</p>
+    <h2 class="section-title reveal">Visite <em style="font-family:var(--serif);font-style:italic;color:var(--gold-light)">virtuelle</em></h2>
+    <p class="section-text reveal">Laissez-vous guider &agrave; travers chaque espace de la villa en images de synth&egrave;se.</p>
+  </div>
+
+  <audio id="film-audio" src="musique.mp3" loop preload="auto" style="display:none"></audio>
+
+  <div class="film-wrap" id="film-wrap">
+    <div class="film-layer" id="fla"></div>
+    <div class="film-layer" id="flb"></div>
+
+    <div class="film-overlay">
+      <div class="film-text-block">
+        <div class="film-left">
+          <div class="film-room-name" id="film-room"></div>
+          <div class="film-villa-name">Villa <em>Kathia</em> &mdash; M&eacute;rignies</div>
+        </div>
+        <div class="film-counter" id="film-ctr"></div>
+      </div>
+    </div>
+
+    <div class="film-controls">
+      <div class="film-progress-track" id="film-prog-track" onclick="filmSeek(event)">
+        <div class="film-progress-fill" id="film-prog"></div>
+      </div>
+      <div class="film-ctrl-bar">
+        <button class="fc-btn" onclick="filmNav(-1)">&#8249;</button>
+        <button class="fc-btn fc-play" id="film-play-btn" onclick="filmToggle()">
+          <svg id="film-play-icon" width="12" height="12" viewBox="0 0 12 12" fill="currentColor"><polygon points="2,1 11,6 2,11"/></svg>
+        </button>
+        <button class="fc-btn" onclick="filmNav(1)">&#8250;</button>
+        <select class="fc-speed" onchange="filmSetDur(+this.value)">
+          <option value="4000">Rapide</option>
+          <option value="6000" selected>Normal</option>
+          <option value="9000">Lent</option>
+        </select>
+        <div class="fc-spacer"></div>
+        <button class="fc-btn" id="fc-mute" onclick="filmToggleMute()" title="Son">&#128266;</button>
+        <button class="fc-fs" onclick="filmFS()">Plein &eacute;cran</button>
+      </div>
+    </div>
+
+    <div class="film-big-play" id="film-big" onclick="filmToggle()">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="rgba(255,255,255,.85)"><polygon points="5,2 24,13 5,24"/></svg>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIE -->
+<section class="gallery-section" id="galerie">
+  <p class="section-tag reveal">Projections 3D</p>
+  <h2 class="section-title reveal">Tous les espaces</h2>
+  <div class="gold-line reveal"></div>
+  <div class="gallery-cats reveal" id="gcats"></div>
+  <div class="gallery-grid" id="ggrid"></div>
+</section>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lb">
+  <button class="lb-close" onclick="lbClose()">&times;</button>
+  <button class="lb-nav lb-prev" onclick="event.stopPropagation();lbNav(-1)">&#8249;</button>
+  <img id="lb-img" src="" alt="">
+  <button class="lb-nav lb-next" onclick="event.stopPropagation();lbNav(1)">&#8250;</button>
+  <div class="lb-info">
+    <div class="lb-counter" id="lb-ctr"></div>
+    <div class="lb-caption" id="lb-cap"></div>
+  </div>
+</div>
+
+
+<div class="ml-overlay" id="mlO">
+  <div class="ml-modal">
+    <button class="ml-close" onclick="document.getElementById('mlO').classList.remove('active')">&times;</button>
+    <p class="ml-title">Mentions l&eacute;gales</p>
+    <span class="ml-subtitle">Berkay Immobilier</span>
+    <div class="ml-body"><p>Berkay Immobilier &mdash; Honoraires &agrave; la charge exclusive du vendeur. Projections architecturales &copy; non reproductibles sans autorisation.</p></div>
+  </div>
+</div>
+
+<footer class="footer">
+  <div></div>
+  <div class="footer-legal">
+    &copy; 2026 Berkay Immobilier &mdash; Tous droits r&eacute;serv&eacute;s
+    &nbsp;|&nbsp;
+    <a href="#" onclick="event.preventDefault();document.getElementById('mlO').classList.add('active')" style="color:rgba(255,255,255,.35);text-decoration:none">Mentions l&eacute;gales</a>
+  </div>
+</footer>
+
+<a href="https://wa.me/33620968485" target="_blank" rel="noopener" aria-label="WhatsApp" style="position:fixed;bottom:1.8rem;right:1.8rem;z-index:999;width:60px;height:60px;border-radius:50%;background:#25d366;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 20px rgba(0,0,0,.25);transition:transform .3s;text-decoration:none" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32" fill="#fff"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.054 9.378L1.056 31.29l6.118-1.96A15.9 15.9 0 0 0 16.004 32C24.826 32 32 24.822 32 16S24.826 0 16.004 0zm9.312 22.594c-.39 1.1-1.932 2.014-3.168 2.282-.846.18-1.95.324-5.67-1.218-4.762-1.972-7.826-6.798-8.064-7.114-.23-.316-1.932-2.574-1.932-4.908s1.222-3.482 1.656-3.96c.434-.478.948-.598 1.264-.598.316 0 .632.002.908.016.292.016.682-.11 1.068.814.39.94 1.328 3.244 1.444 3.478.118.234.196.508.04.816-.158.316-.236.512-.47.79-.236.278-.496.62-.708.832-.236.236-.482.492-.208.964s1.224 2.02 2.63 3.274c1.808 1.614 3.332 2.114 3.806 2.348.474.234.752.196 1.028-.118.278-.316 1.186-1.382 1.502-1.858.316-.478.632-.394 1.068-.236.434.158 2.762 1.302 3.236 1.54.474.234.79.354.908.55.118.196.118 1.136-.272 2.236z"/></svg>
+</a>
+
+<script>
+/* ── NAV ── */
+var nav=document.getElementById('nav');
+window.addEventListener('scroll',function(){nav.classList.toggle('scrolled',window.scrollY>80)});
+var obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('vis')})},{threshold:.12});
+document.querySelectorAll('.reveal').forEach(function(el){obs.observe(el)});
+
+/* ── MOBILE ── */
+var _b=document.getElementById('nav-burger'),_m=document.getElementById('nav-mobile');
+function closeM(){_m.classList.remove('open');_b.classList.remove('open');document.body.style.overflow=''}
+_b.addEventListener('click',function(){_m.classList.add('open');_b.classList.add('open');document.body.style.overflow='hidden'});
+document.getElementById('nav-mobile-close').addEventListener('click',closeM);
+
+/* ── PROJECTIONS DATA ── */
+var PROJ=[
+  {s:'Photos/Projections/EXTERIEUR FACADE SUD.jpg',  l:'Façade sud',            c:'ext'},
+  {s:'Photos/Projections/EXTERIEUR FACADE NORD.jpg', l:'Façade nord',           c:'ext'},
+  {s:'Photos/Projections/EXTERIEUR.jpg',             l:'Vue extérieure',        c:'ext'},
+  {s:'Photos/Projections/JARDIN .jpg',               l:'Jardin',                c:'ext'},
+  {s:'Photos/Projections/TERRASSE.jpg',              l:'Terrasse',              c:'ext'},
+  {s:'Photos/Projections/PALIER.jpg',                l:'Palier',                c:'vie'},
+  {s:'Photos/Projections/SEJOUR 1.jpg',              l:'Séjour',                c:'vie'},
+  {s:'Photos/Projections/BUREAU.jpg',                l:'Bureau',                c:'vie'},
+  {s:'Photos/Projections/Bureau.png',               l:'Bureau — vue 2',        c:'vie'},
+  {s:'Photos/Projections/CHAMBRE.jpg',               l:'Chambre',               c:'ch'},
+  {s:'Photos/Projections/CHAMBRE 2.jpg',             l:'Chambre — vue 2',       c:'ch'},
+  {s:'Photos/Projections/CHAMBRE ENFANT.jpg',        l:'Chambre enfant',        c:'ch'},
+  {s:'Photos/Projections/DRESSING.jpg',              l:'Dressing',              c:'ch'},
+  {s:'Photos/Projections/SALLE DE BAIN 2.jpg',       l:'Salle de bain',         c:'sdb'},
+  {s:'Photos/Projections/SALLE DE DOUCHE.jpg',       l:'Salle de douche',       c:'sdb'},
+  {s:'Photos/Projections/SALLE DE DOUCHE 2.jpg',     l:'Salle de douche 2',     c:'sdb'},
+  {s:'Photos/Projections/a.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/c.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/d.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/e.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/f.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/h.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/i.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/j.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/k.jpg',l:'Vue 3D',c:'plus'},
+  {s:'Photos/Projections/l.jpg',l:'Vue 3D',c:'plus'}
+];
+
+var CATS=[
+  {id:'all',  nm:'Tout voir'},
+  {id:'ext',  nm:'Extérieur'},
+  {id:'vie',  nm:'Espaces de vie'},
+  {id:'ch',   nm:'Chambres'},
+  {id:'sdb',  nm:'Salles d\'eau'},
+  {id:'plus', nm:'Vues 3D'}
+];
+
+/* ── GALERIE ── */
+var curCat='all', filtered=PROJ, curLB=0;
+var lb=document.getElementById('lb');
+
+function buildCats(){
+  var el=document.getElementById('gcats');
+  CATS.forEach(function(c){
+    var btn=document.createElement('button');
+    btn.className='gcat'+(c.id==='all'?' on':'');
+    btn.textContent=c.nm;
+    btn.addEventListener('click',function(){
+      document.querySelectorAll('.gcat').forEach(function(b){b.classList.remove('on')});
+      btn.classList.add('on');
+      curCat=c.id;
+      buildGrid();
+    });
+    el.appendChild(btn);
+  });
+}
+
+function buildGrid(){
+  var g=document.getElementById('ggrid');
+  g.innerHTML='';
+  filtered=curCat==='all'?PROJ:PROJ.filter(function(p){return p.c===curCat});
+  filtered.forEach(function(p,i){
+    var d=document.createElement('div');
+    d.className='g-item';
+    d.innerHTML='<img src="'+p.s+'" alt="'+p.l+'" loading="lazy"><div class="g-item-lbl">'+p.l+'</div>';
+    (function(idx){d.addEventListener('click',function(){lbOpen(idx)})})(i);
+    g.appendChild(d);
+  });
+}
+
+buildCats();
+buildGrid();
+
+/* ── LIGHTBOX ── */
+function lbOpen(i){
+  curLB=i;
+  document.getElementById('lb-img').src=filtered[i].s;
+  document.getElementById('lb-ctr').textContent=(i+1)+' / '+filtered.length;
+  document.getElementById('lb-cap').textContent=filtered[i].l;
+  lb.classList.add('active');
+  document.body.style.overflow='hidden';
+}
+function lbClose(){lb.classList.remove('active');document.body.style.overflow=''}
+function lbNav(d){
+  curLB=(curLB+d+filtered.length)%filtered.length;
+  document.getElementById('lb-img').src=filtered[curLB].s;
+  document.getElementById('lb-ctr').textContent=(curLB+1)+' / '+filtered.length;
+  document.getElementById('lb-cap').textContent=filtered[curLB].l;
+}
+lb.addEventListener('click',function(e){if(e.target===lb)lbClose()});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){lbClose();document.getElementById('mlO').classList.remove('active')}
+  if(!lb.classList.contains('active'))return;
+  if(e.key==='ArrowLeft')lbNav(-1);
+  if(e.key==='ArrowRight')lbNav(1);
+});
+document.getElementById('mlO').addEventListener('click',function(e){if(e.target===this)this.classList.remove('active')});
+
+/* ══════════════════════════════════
+   FILM KEN BURNS
+══════════════════════════════════ */
+var FLA=document.getElementById('fla');
+var FLB=document.getElementById('flb');
+var fProg=document.getElementById('film-prog');
+var fPlayBtn=document.getElementById('film-play-btn');
+var fPlayIcon=document.getElementById('film-play-icon');
+var fBig=document.getElementById('film-big');
+var fRoom=document.getElementById('film-room');
+var fCtr=document.getElementById('film-ctr');
+
+var fIdx=0, fPlaying=false, fDur=6000;
+var fRafId=null, fStart=0, fElapsed=0;
+var fActive='a'; // which layer is currently shown
+
+var kbKeys=['kb1','kb2','kb3','kb4'];
+
+function fSetBg(el,idx){
+  el.style.backgroundImage='url("'+PROJ[idx].s+'")';
+}
+
+function fGo(idx, anim){
+  fIdx=((idx%PROJ.length)+PROJ.length)%PROJ.length;
+  fRoom.textContent=PROJ[fIdx].l;
+  fCtr.textContent=(fIdx+1)+' / '+PROJ.length;
+
+  var inc=fActive==='a'?FLA:FLB;
+  var out=fActive==='a'?FLB:FLA;
+
+  fSetBg(inc,fIdx);
+  inc.style.animation='none';
+  inc.offsetHeight; // force reflow
+  inc.style.animation=kbKeys[fIdx%4]+' '+(fDur*1.15/1000)+'s ease-in-out forwards';
+  inc.style.opacity='1';
+  inc.style.transition='opacity 1s ease';
+  out.style.opacity='0';
+  out.style.transition='opacity 1s ease';
+
+  fActive=fActive==='a'?'b':'a';
+
+  if(anim){
+    fStart=performance.now();
+    fElapsed=0;
+    fProgAnim();
+  }
+}
+
+function fProgAnim(){
+  cancelAnimationFrame(fRafId);
+  var tick=function(){
+    if(!fPlaying)return;
+    var now=performance.now();
+    var el=fElapsed+(now-fStart);
+    var pct=Math.min(el/fDur*100,100);
+    fProg.style.width=pct+'%';
+    if(pct<100){fRafId=requestAnimationFrame(tick)}
+    else{fNext()}
+  };
+  fStart=performance.now();
+  fRafId=requestAnimationFrame(tick);
+}
+
+function fNext(){fGo(fIdx+1,true)}
+
+var fAudio=document.getElementById('film-audio');
+var fMuted=false;
+var fInFS=false;
+
+function fAudioSync(){
+  if(fInFS && !fMuted && fPlaying) fAudio.play().catch(function(){});
+  else fAudio.pause();
+}
+
+function fPlay(){
+  fPlaying=true;
+  fPlayIcon.innerHTML='<rect x="2" y="1" width="3.5" height="10"/><rect x="6.5" y="1" width="3.5" height="10"/>';
+  fBig.classList.add('hidden');
+  fGo(fIdx,true);
+  fAudioSync();
+}
+
+function fPause(){
+  fPlaying=false;
+  cancelAnimationFrame(fRafId);
+  var w=parseFloat(fProg.style.width)||0;
+  fElapsed=w/100*fDur;
+  fPlayIcon.innerHTML='<polygon points="2,1 11,6 2,11"/>';
+  fBig.classList.remove('hidden');
+  fAudio.pause();
+}
+
+function filmToggleMute(){
+  fMuted=!fMuted;
+  var btn=document.getElementById('fc-mute');
+  if(fMuted){
+    fAudio.pause();
+    btn.innerHTML='&#128263;';
+    btn.title='Activer le son';
+  } else {
+    fAudioSync();
+    btn.innerHTML='&#128266;';
+    btn.title='Couper le son';
+  }
+}
+
+function filmToggle(){fPlaying?fPause():fPlay()}
+
+function filmNav(d){
+  var was=fPlaying;
+  fPause();
+  fElapsed=0;fProg.style.width='0%';
+  fGo(fIdx+d,false);
+  if(was)fPlay();
+}
+
+function filmSetDur(v){fDur=v}
+
+function filmSeek(e){
+  var r=document.getElementById('film-prog-track').getBoundingClientRect();
+  var pct=(e.clientX-r.left)/r.width;
+  var idx=Math.floor(pct*PROJ.length);
+  var was=fPlaying;
+  fPause();fElapsed=0;fProg.style.width='0%';
+  fGo(idx,false);
+  if(was)fPlay();
+}
+
+function filmFS(){
+  var w=document.getElementById('film-wrap');
+  var btn=document.querySelector('.fc-fs');
+  // Si déjà en faux plein écran, on quitte
+  if(w.classList.contains('fakeFS')){
+    w.classList.remove('fakeFS');
+    document.body.style.overflow='';
+    if(btn)btn.textContent='Plein \u00e9cran';
+    fInFS=false; fAudioSync();
+    return;
+  }
+  // Tentative plein écran natif
+  var p=null;
+  if(w.requestFullscreen) p=w.requestFullscreen();
+  else if(w.webkitRequestFullscreen) p=w.webkitRequestFullscreen();
+  else if(w.mozRequestFullScreen){ w.mozRequestFullScreen(); fInFS=true; fAudioSync(); return; }
+  // Fallback CSS pour iOS Safari
+  if(p && typeof p.catch==='function'){
+    p.then(function(){ fInFS=true; fAudioSync(); })
+     .catch(function(){ w.classList.add('fakeFS'); document.body.style.overflow='hidden'; if(btn)btn.textContent='Fermer'; fInFS=true; fAudioSync(); });
+  } else if(!p){
+    w.classList.add('fakeFS'); document.body.style.overflow='hidden'; if(btn)btn.textContent='Fermer'; fInFS=true; fAudioSync();
+  }
+}
+
+// Quand l'utilisateur quitte le plein écran natif (touche Echap, etc.)
+document.addEventListener('fullscreenchange', function(){
+  if(!document.fullscreenElement){ fInFS=false; fAudioSync(); }
+});
+document.addEventListener('webkitfullscreenchange', function(){
+  if(!document.webkitFullscreenElement){ fInFS=false; fAudioSync(); }
+});
+
+// Init
+fSetBg(FLA,0);fSetBg(FLB,1);
+FLA.style.opacity='0';FLB.style.opacity='0';
+fActive='b';
+fGo(0,false);
+fPlay(); // autoplay
+</script>
+</body>
+</html>
