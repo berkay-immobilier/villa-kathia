@@ -1853,5 +1853,79 @@ _menu && _menu.addEventListener('click', function(e){ if(e.target===_menu) close
 }
 </style>
 
+<!-- ═══ MUSIC PLAYER ═══ -->
+<audio id="bg-music" loop preload="auto">
+  <source src="musique.mp3" type="audio/mpeg" />
+</audio>
+
+<button id="music-btn" aria-label="Musique" title="Musique d'ambiance" onclick="toggleMusic()">
+  <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M9 4l12 8-12 8V4z"/></svg>
+  <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" style="display:none"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+  <span id="music-label">Ambiance</span>
+</button>
+
+<style>
+#music-btn {
+  position: fixed; bottom: 100px; right: 28px; z-index: 999;
+  background: rgba(13,27,42,0.92); border: 1px solid rgba(201,168,76,0.4);
+  color: #c9a84c; padding: 10px 16px; border-radius: 24px;
+  display: flex; align-items: center; gap: 8px;
+  font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  backdrop-filter: blur(8px); transition: all 0.3s;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+#music-btn:hover { background: rgba(201,168,76,0.15); border-color: #c9a84c; }
+#music-btn.playing { background: rgba(201,168,76,0.12); }
+@media (max-width: 640px) { #music-btn { bottom: 90px; right: 16px; } }
+</style>
+
+<script>
+const music = document.getElementById('bg-music');
+const btn = document.getElementById('music-btn');
+const iconPlay = document.getElementById('icon-play');
+const iconPause = document.getElementById('icon-pause');
+const label = document.getElementById('music-label');
+let playing = false;
+
+// Try autoplay on first user interaction
+function startOnInteraction() {
+  if (!playing) {
+    music.volume = 0.35;
+    music.play().then(() => {
+      playing = true;
+      iconPlay.style.display = 'none';
+      iconPause.style.display = 'block';
+      label.textContent = 'Pause';
+      btn.classList.add('playing');
+    }).catch(() => {});
+  }
+  document.removeEventListener('scroll', startOnInteraction);
+  document.removeEventListener('click', startOnInteraction);
+}
+document.addEventListener('scroll', startOnInteraction, { once: true });
+document.addEventListener('click', startOnInteraction, { once: true });
+
+function toggleMusic() {
+  if (playing) {
+    music.pause();
+    playing = false;
+    iconPlay.style.display = 'block';
+    iconPause.style.display = 'none';
+    label.textContent = 'Ambiance';
+    btn.classList.remove('playing');
+  } else {
+    music.volume = 0.35;
+    music.play().then(() => {
+      playing = true;
+      iconPlay.style.display = 'none';
+      iconPause.style.display = 'block';
+      label.textContent = 'Pause';
+      btn.classList.add('playing');
+    });
+  }
+}
+</script>
+
 </body>
 </html>

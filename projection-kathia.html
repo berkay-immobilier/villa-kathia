@@ -624,12 +624,14 @@ function filmFS(){
   }
 }
 
-// Quand l'utilisateur quitte le plein écran natif (touche Echap, etc.)
+// Entrée et sortie du plein écran natif (touche Echap, etc.)
 document.addEventListener('fullscreenchange', function(){
-  if(!document.fullscreenElement){ fInFS=false; fAudioSync(); }
+  fInFS = !!document.fullscreenElement;
+  fAudioSync();
 });
 document.addEventListener('webkitfullscreenchange', function(){
-  if(!document.webkitFullscreenElement){ fInFS=false; fAudioSync(); }
+  fInFS = !!document.webkitFullscreenElement;
+  fAudioSync();
 });
 
 // Init
